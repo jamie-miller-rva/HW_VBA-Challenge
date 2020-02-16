@@ -12,7 +12,8 @@ Sub StockMarket_Analysis()
     Dim i As Long ' I will use this to refer to rows in my worksheet
     Dim summary_row As Long ' counter for summary table
     Dim total_stock_volume
-
+    Dim yearly_change ' the yearly change is the closeing price the year - opening price for the year
+    Dim start
 ' ------------------------------------------------------------------------------------
     ' Interate through each worksheet (ws)
     For Each ws in worksheets
@@ -25,6 +26,10 @@ Sub StockMarket_Analysis()
     summary_row = 2
 
     total_stock_volume = 0
+
+    yearly_change = 0
+
+    start = 2
    
     ' Identify the last row
     LastRow = ws.Cells(Rows.Count, "A").End(xlUp).row ' this code is from an activity in Day 3 called Wells Fargo
@@ -56,9 +61,27 @@ Sub StockMarket_Analysis()
                 ' Record total stock volumne in summary table (column L)
                 ws.Range("L" & summary_row) = total_stock_volume
 
+                ' Calculate the yearly_change where yearly_change = closing price - opening price
+                ' Note the closing price is in cells(i, 6)
+                ' Note start is first cells(2, 3) and then moves to cells(start, 3)
+                ' Where start is the first opening price for the new ticker symbol
+                yearly_change = ws.cells(i, 6) - ws.cells(start, 3)
 
+                ' Record yearly_change in summary table (column J)
+                ws.Range("J" & summary_row) = yearly_change
+
+
+
+
+                '-------------------------------------------------------------------
                 ' Advance summary_row to next row
                 summary_row = summary_row + 1
+
+                ' Reset yearly_change for next ticker symbol
+                yearly_change = 0
+
+                ' Advance start to the first row of the new ticker symbol
+                start = i + 1
 
             ' If ticker is the same ...
             Else
